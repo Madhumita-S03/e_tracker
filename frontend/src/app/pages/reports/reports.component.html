@@ -1,0 +1,87 @@
+<div class="page-container">
+  <div class="header-row">
+    <h1>Reports</h1>
+    <button class="btn btn-outline" (click)="exportCsv()" [disabled]="!expenses.length">Export CSV</button>
+  </div>
+
+  <div class="card filter-card">
+    <form [formGroup]="filterForm" (ngSubmit)="runReport()" class="filter-grid">
+      <div class="field">
+        <label>From</label>
+        <input type="date" formControlName="startDate" />
+      </div>
+      <div class="field">
+        <label>To</label>
+        <input type="date" formControlName="endDate" />
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select formControlName="categoryId">
+          <option [ngValue]="null">All</option>
+          <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+        </select>
+      </div>
+      <div class="field filter-actions">
+        <button class="btn btn-primary" type="submit">Run Report</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="error-text" *ngIf="errorMessage">{{ errorMessage }}</div>
+  <div class="loading" *ngIf="loading">Generating report...</div>
+
+  <ng-container *ngIf="!loading">
+    <div class="summary-card card">
+      <span class="label">Total for selected range</span>
+      <span class="value">{{ totalAmount | number: '1.2-2' }}</span>
+      <span class="sub">{{ expenses.length }} expenses</span>
+    </div>
+
+    <div class="charts-grid">
+      <div class="card chart-card">
+        <h3>By Category</h3>
+        <div class="bar-row" *ngFor="let c of byCategory">
+          <span class="bar-label">{{ c.name }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="totalAmount ? (c.value / totalAmount) * 100 : 0" [style.background]="c.color"></div>
+          </div>
+          <span class="bar-value">{{ c.value | number: '1.2-2' }}</span>
+        </div>
+        <div class="empty-state" *ngIf="!byCategory.length">No data for this range.</div>
+      </div>
+
+      <div class="card chart-card">
+        <h3>By Payment Method</h3>
+        <div class="bar-row" *ngFor="let p of byPaymentMethod">
+          <span class="bar-label">{{ p.method }}</span>
+          <div class="bar-track">
+            <div class="bar-fill trend" [style.width.%]="totalAmount ? (p.value / totalAmount) * 100 : 0"></div>
+          </div>
+          <span class="bar-value">{{ p.value | number: '1.2-2' }}</span>
+        </div>
+        <div class="empty-state" *ngIf="!byPaymentMethod.length">No data for this range.</div>
+      </div>
+    </div>
+
+    <div class="card table-card">
+      <h3>Detailed Expenses</h3>
+      <table class="report-table" *ngIf="expenses.length; else emptyState">
+        <thead>
+          <tr><th>Title</th><th>Category</th><th>Date</th><th>Payment</th><th>Amount</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of expenses">
+            <td>{{ e.title }}</td>
+            <td><span class="tag" [style.background]="e.categoryColor">{{ e.categoryName }}</span></td>
+            <td>{{ e.expenseDate }}</td>
+            <td>{{ e.paymentMethod }}</td>
+            <td>{{ e.amount | number: '1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #emptyState>
+        <div class="empty-state">No expenses found for this range.</div>
+      </ng-template>
+    </div>
+  </ng-container>
+</div>

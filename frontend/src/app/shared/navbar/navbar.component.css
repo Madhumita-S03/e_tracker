@@ -1,0 +1,71 @@
+.navbar {
+  background: #fff;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+}
+
+.navbar-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 14px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.brand {
+  font-weight: 800;
+  font-size: 18px;
+  text-decoration: none;
+  color: #1F2333;
+  white-space: nowrap;
+}
+
+.links {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  justify-content: center;
+}
+
+.links a {
+  text-decoration: none;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 6px 4px;
+  border-bottom: 2px solid transparent;
+}
+
+.links a.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+.user-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.logout-btn { padding: 6px 12px; font-size: 13px; }

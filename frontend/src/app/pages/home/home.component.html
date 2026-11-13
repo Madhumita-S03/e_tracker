@@ -1,0 +1,26 @@
+<div class="home-wrapper">
+  <div class="hero">
+    <h1>👨‍👩‍👧‍👦 Family Expense Tracker</h1>
+    <p>Select your profile to sign in and manage your personal expenses</p>
+  </div>
+
+  <div class="page-container">
+    <div class="loading" *ngIf="loading">Loading family members...</div>
+    <div class="error-text" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+    <div class="member-grid" *ngIf="!loading && members.length">
+      <div class="member-card card" *ngFor="let member of members" (click)="selectMember(member)">
+        <div class="avatar-large" [style.background]="member.avatarColor">
+          {{ member.fullName.charAt(0) }}
+        </div>
+        <h3>{{ member.fullName }}</h3>
+        <p class="username">&#64;{{ member.username }}</p>
+        <button class="btn btn-primary select-btn">Sign In</button>
+      </div>
+    </div>
+
+    <div class="empty-state" *ngIf="!loading && !members.length && !errorMessage">
+      No family member accounts found yet.
+    </div>
+  </div>
+</div>

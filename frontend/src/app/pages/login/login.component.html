@@ -1,0 +1,33 @@
+<div class="login-wrapper">
+  <div class="login-card card">
+    <a routerLink="/home" class="back-link">&larr; Back to family members</a>
+    <h1>Welcome back</h1>
+    <p class="subtitle">Sign in to manage your expenses</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="username">Username</label>
+        <input id="username" type="text" formControlName="username" placeholder="e.g. member1" />
+        <div class="error-text" *ngIf="form.get('username')?.touched && form.get('username')?.invalid">
+          Username is required
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" placeholder="Enter your password" />
+        <div class="error-text" *ngIf="form.get('password')?.touched && form.get('password')?.invalid">
+          Password is required
+        </div>
+      </div>
+
+      <div class="error-text banner" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+      <button class="btn btn-primary submit-btn" type="submit" [disabled]="loading">
+        {{ loading ? 'Signing in...' : 'Sign In' }}
+      </button>
+    </form>
+
+    <p class="hint">Development password for all seeded accounts: <strong>******</strong></p>
+  </div>
+</div>

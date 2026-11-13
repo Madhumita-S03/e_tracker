@@ -1,0 +1,126 @@
+<div class="page-container">
+  <div class="header-row">
+    <h1>Expenses</h1>
+    <button class="btn btn-primary" (click)="openAddForm()">+ Add Expense</button>
+  </div>
+
+  <div class="error-text" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div class="card filter-card">
+    <form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="filter-grid">
+      <div class="field">
+        <label>Search</label>
+        <input type="text" formControlName="keyword" placeholder="Title or notes..." />
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select formControlName="categoryId">
+          <option [ngValue]="null">All</option>
+          <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>From</label>
+        <input type="date" formControlName="startDate" />
+      </div>
+      <div class="field">
+        <label>To</label>
+        <input type="date" formControlName="endDate" />
+      </div>
+      <div class="field">
+        <label>Min Amount</label>
+        <input type="number" formControlName="minAmount" step="0.01" />
+      </div>
+      <div class="field">
+        <label>Max Amount</label>
+        <input type="number" formControlName="maxAmount" step="0.01" />
+      </div>
+      <div class="field">
+        <label>Payment Method</label>
+        <select formControlName="paymentMethod">
+          <option [ngValue]="null">All</option>
+          <option *ngFor="let pm of paymentMethods" [ngValue]="pm">{{ pm }}</option>
+        </select>
+      </div>
+      <div class="filter-actions">
+        <button class="btn btn-primary" type="submit">Apply</button>
+        <button class="btn btn-outline" type="button" (click)="resetFilters()">Reset</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Add / Edit form -->
+  <div class="card form-card" *ngIf="showForm">
+    <h3>{{ editingId ? 'Edit Expense' : 'Add Expense' }}</h3>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="expense-form-grid">
+      <div class="field">
+        <label>Title</label>
+        <input type="text" formControlName="title" placeholder="e.g. Weekly groceries" />
+        <div class="error-text" *ngIf="form.get('title')?.touched && form.get('title')?.invalid">Title is required</div>
+      </div>
+      <div class="field">
+        <label>Amount</label>
+        <input type="number" formControlName="amount" step="0.01" placeholder="0.00" />
+        <div class="error-text" *ngIf="form.get('amount')?.touched && form.get('amount')?.invalid">Enter a valid amount</div>
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input type="date" formControlName="expenseDate" />
+        <div class="error-text" *ngIf="form.get('expenseDate')?.touched && form.get('expenseDate')?.invalid">Date is required</div>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select formControlName="categoryId">
+          <option [ngValue]="null" disabled>Select category</option>
+          <option *ngFor="let c of categories" [ngValue]="c.id">{{ c.name }}</option>
+        </select>
+        <div class="error-text" *ngIf="form.get('categoryId')?.touched && form.get('categoryId')?.invalid">Category is required</div>
+      </div>
+      <div class="field">
+        <label>Payment Method</label>
+        <select formControlName="paymentMethod">
+          <option *ngFor="let pm of paymentMethods" [ngValue]="pm">{{ pm }}</option>
+        </select>
+      </div>
+      <div class="field span-2">
+        <label>Notes</label>
+        <textarea formControlName="notes" rows="2" placeholder="Optional notes..."></textarea>
+      </div>
+      <div class="form-actions span-2">
+        <button class="btn btn-primary" type="submit">{{ editingId ? 'Save Changes' : 'Add Expense' }}</button>
+        <button class="btn btn-outline" type="button" (click)="cancelForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="loading" *ngIf="loading">Loading expenses...</div>
+
+  <div class="card table-card" *ngIf="!loading">
+    <table class="expense-table" *ngIf="expenses.length; else emptyState">
+      <thead>
+        <tr>
+          <th>Title</th><th>Category</th><th>Date</th><th>Payment</th><th>Amount</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let e of expenses">
+          <td>
+            <div class="title-cell">{{ e.title }}</div>
+            <div class="notes-cell" *ngIf="e.notes">{{ e.notes }}</div>
+          </td>
+          <td><span class="tag" [style.background]="e.categoryColor">{{ e.categoryName }}</span></td>
+          <td>{{ e.expenseDate }}</td>
+          <td>{{ e.paymentMethod }}</td>
+          <td class="amount-cell">{{ e.amount | number: '1.2-2' }}</td>
+          <td class="actions-cell">
+            <button class="btn btn-outline small" (click)="openEditForm(e)">Edit</button>
+            <button class="btn btn-danger small" (click)="deleteExpense(e)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <ng-template #emptyState>
+      <div class="empty-state">No expenses found. Try adjusting filters or add a new expense.</div>
+    </ng-template>
+  </div>
+</div>

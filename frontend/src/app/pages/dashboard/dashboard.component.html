@@ -1,0 +1,70 @@
+<div class="page-container">
+  <h1>Dashboard</h1>
+
+  <div class="loading" *ngIf="loading">Loading dashboard...</div>
+  <div class="error-text" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <ng-container *ngIf="data && !loading">
+    <div class="summary-grid">
+      <div class="summary-card card">
+        <span class="label">This Month</span>
+        <span class="value">{{ data.totalThisMonth | number: '1.2-2' }}</span>
+        <span class="sub">{{ data.expenseCountThisMonth }} expenses</span>
+      </div>
+      <div class="summary-card card">
+        <span class="label">This Year</span>
+        <span class="value">{{ data.totalThisYear | number: '1.2-2' }}</span>
+      </div>
+      <div class="summary-card card">
+        <span class="label">All Time</span>
+        <span class="value">{{ data.totalAllTime | number: '1.2-2' }}</span>
+      </div>
+    </div>
+
+    <div class="charts-grid">
+      <div class="card chart-card">
+        <h3>Spending by Category</h3>
+        <div class="bar-row" *ngFor="let cat of categoryEntries">
+          <span class="bar-label">{{ cat.name }}</span>
+          <div class="bar-track">
+            <div class="bar-fill" [style.width.%]="(cat.value / maxCategoryValue) * 100"></div>
+          </div>
+          <span class="bar-value">{{ cat.value | number: '1.2-2' }}</span>
+        </div>
+        <div class="empty-state" *ngIf="!categoryEntries.length">No expenses yet.</div>
+      </div>
+
+      <div class="card chart-card">
+        <h3>Monthly Trend</h3>
+        <div class="bar-row" *ngFor="let m of monthlyEntries">
+          <span class="bar-label">{{ m.month }}</span>
+          <div class="bar-track">
+            <div class="bar-fill trend" [style.width.%]="(m.value / maxMonthlyValue) * 100"></div>
+          </div>
+          <span class="bar-value">{{ m.value | number: '1.2-2' }}</span>
+        </div>
+        <div class="empty-state" *ngIf="!monthlyEntries.length">No expenses yet.</div>
+      </div>
+    </div>
+
+    <div class="card recent-card">
+      <h3>Recent Expenses</h3>
+      <table class="recent-table" *ngIf="data.recentExpenses.length; else noRecent">
+        <thead>
+          <tr><th>Title</th><th>Category</th><th>Date</th><th>Amount</th></tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let e of data.recentExpenses">
+            <td>{{ e.title }}</td>
+            <td><span class="tag" [style.background]="e.categoryColor">{{ e.categoryName }}</span></td>
+            <td>{{ e.expenseDate }}</td>
+            <td>{{ e.amount | number: '1.2-2' }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <ng-template #noRecent>
+        <div class="empty-state">No recent expenses. Add one from the Expenses page.</div>
+      </ng-template>
+    </div>
+  </ng-container>
+</div>

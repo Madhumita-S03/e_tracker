@@ -1,0 +1,56 @@
+<div class="page-container">
+  <div class="header-row">
+    <h1>Categories</h1>
+    <button class="btn btn-primary" (click)="openAddForm()">+ Add Category</button>
+  </div>
+
+  <div class="error-text" *ngIf="errorMessage">{{ errorMessage }}</div>
+
+  <div class="card form-card" *ngIf="showForm">
+    <h3>{{ editingId ? 'Edit Category' : 'Add Category' }}</h3>
+    <form [formGroup]="form" (ngSubmit)="submit()" class="category-form-grid">
+      <div class="field">
+        <label>Name</label>
+        <input type="text" formControlName="name" placeholder="e.g. Travel" />
+        <div class="error-text" *ngIf="form.get('name')?.touched && form.get('name')?.invalid">Name is required</div>
+      </div>
+      <div class="field">
+        <label>Color</label>
+        <input type="color" formControlName="colorCode" />
+      </div>
+      <div class="field span-2">
+        <label>Description</label>
+        <input type="text" formControlName="description" placeholder="Optional description" />
+      </div>
+      <div class="form-actions span-2">
+        <button class="btn btn-primary" type="submit">{{ editingId ? 'Save Changes' : 'Add Category' }}</button>
+        <button class="btn btn-outline" type="button" (click)="cancelForm()">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="loading" *ngIf="loading">Loading categories...</div>
+
+  <div class="category-grid" *ngIf="!loading">
+    <div class="category-card card" *ngFor="let c of categories">
+      <div class="swatch" [style.background]="c.colorCode || '#6B7280'"></div>
+      <div class="category-info">
+        <h4>{{ c.name }}</h4>
+        <p *ngIf="c.description">{{ c.description }}</p>
+        <span class="default-badge" *ngIf="c.defaultCategory">Default</span>
+      </div>
+      <div class="category-actions">
+        <button class="btn btn-outline small" (click)="openEditForm(c)">Edit</button>
+        <button
+          class="btn btn-danger small"
+          (click)="deleteCategory(c)"
+          [disabled]="c.defaultCategory"
+          [title]="c.defaultCategory ? 'Default categories cannot be deleted' : 'Delete'"
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+    <div class="empty-state" *ngIf="!categories.length">No categories found.</div>
+  </div>
+</div>

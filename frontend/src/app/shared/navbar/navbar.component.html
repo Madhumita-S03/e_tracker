@@ -1,0 +1,16 @@
+<nav class="navbar">
+  <div class="navbar-inner">
+    <a class="brand" routerLink="/home">💰 Family Expense Tracker</a>
+    <div class="links" *ngIf="currentUser">
+      <a routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/expenses" routerLinkActive="active">Expenses</a>
+      <a routerLink="/categories" routerLinkActive="active">Categories</a>
+      <a routerLink="/reports" routerLinkActive="active">Reports</a>
+    </div>
+    <div class="user-box" *ngIf="currentUser">
+      <span class="avatar" [style.background]="currentUser.avatarColor">{{ currentUser.fullName.charAt(0) }}</span>
+      <span class="name">{{ currentUser.fullName }}</span>
+      <button class="btn btn-outline logout-btn" (click)="logout()">Logout</button>
+    </div>
+  </div>
+</nav>

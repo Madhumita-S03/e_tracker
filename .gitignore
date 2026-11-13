@@ -1,0 +1,25 @@
+
+# Angular
+node_modules/
+dist/
+.angular/
+
+# Spring Boot / Java
+target/
+*.class
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Visual Studio
+.vs/
